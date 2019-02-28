@@ -56,6 +56,7 @@ type Redis struct {
 }
 
 type Mongodb struct {
+	Database string
 	Host     string
 	Port     int
 	User     string

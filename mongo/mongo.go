@@ -6,6 +6,7 @@ import (
 	"log"
 	"time"
 
+	"github.com/laughmaker/go-pkg/config"
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/mongo"
 	"go.mongodb.org/mongo-driver/mongo/options"
@@ -14,7 +15,8 @@ import (
 var Database *mongo.Database
 
 func Setup() (err error) {
-	client, err := mongo.NewClient(options.Client().ApplyURI("mongodb://@localhost:27017"))
+	uri := fmt.Printf("mongodb://@%s:%d", config.MongodbConfig.Host, config.MongodbConfig.Port)
+	client, err := mongo.NewClient(options.Client().ApplyURI(uri))
 	if err != nil {
 		fmt.Println("new client err:%v", err)
 		return err
@@ -22,7 +24,7 @@ func Setup() (err error) {
 	ctx, cancel := context.WithTimeout(context.Background(), 20*time.Second)
 	defer cancel()
 	err = client.Connect(ctx)
-	Database = client.Database("youpin")
+	Database = client.Database(config.MongodbConfig.Database)
 	if err != nil {
 		fmt.Println("client connect err:%v", err)
 		return err
