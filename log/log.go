@@ -8,7 +8,7 @@ import (
 	"runtime"
 	"time"
 
-	"github.com/laughmaker/go-pkg/config"
+	"github.com/laughmaker/go-pkg/conf"
 	"github.com/laughmaker/go-pkg/file"
 )
 
@@ -80,13 +80,13 @@ func setPrefix(level Level) {
 }
 
 func getLogFilePath() string {
-	return fmt.Sprintf("%s%s", config.AppConfig.RuntimePath, config.AppConfig.LogSavePath)
+	return fmt.Sprintf("%s%s", conf.AppConf.RuntimePath, conf.AppConf.LogSavePath)
 }
 
 func getLogFileName() string {
 	return fmt.Sprintf("%s-%s.%s",
-		config.AppConfig.LogSaveName,
-		time.Now().Format(config.AppConfig.TimeFormt),
-		config.AppConfig.LogFileExt,
+		conf.AppConf.LogSaveName,
+		time.Now().Format(conf.AppConf.TimeFormt),
+		conf.AppConf.LogFileExt,
 	)
 }

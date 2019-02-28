@@ -1,4 +1,4 @@
-package config
+package conf
 
 import (
 	"fmt"
@@ -6,6 +6,14 @@ import (
 
 	"github.com/go-ini/ini"
 )
+
+type Module struct {
+	Database bool
+	Mail     bool
+	Redis    bool
+	Mongodb  bool
+	Log      bool
+}
 
 type App struct {
 	Name        string
@@ -65,30 +73,32 @@ type Mongodb struct {
 
 var cfg *ini.File
 
-var AppConfig = &App{}
-var DatabaseConfig = &Database{}
-var ServerConfig = &Server{}
-var MailConfig = &Mail{}
-var RedisConfig = &Redis{}
-var MongodbConfig = &Mongodb{}
+var ModuleConf = &Module{}
+var AppConf = &App{}
+var DatabaseConf = &Database{}
+var ServerConf = &Server{}
+var MailConf = &Mail{}
+var RedisConf = &Redis{}
+var MongodbConf = &Mongodb{}
 
 func Setup() {
 	var err error
-	cfg, err = ini.Load("src/config/app.ini", "src/config/app.ini.local")
+	cfg, err = ini.Load("src/conf/app.ini", "src/conf/app.ini.local")
 	if err != nil {
 		fmt.Printf("fail to parse 'app.ini': %v", err)
 	}
 
-	mapTo("app", AppConfig)
-	mapTo("database", DatabaseConfig)
-	mapTo("server", ServerConfig)
-	mapTo("mail", MailConfig)
-	mapTo("redis", RedisConfig)
-	mapTo("mongodb", MongodbConfig)
+	mapTo("app", AppConf)
+	mapTo("database", DatabaseConf)
+	mapTo("server", ServerConf)
+	mapTo("mail", MailConf)
+	mapTo("redis", RedisConf)
+	mapTo("mongodb", MongodbConf)
+	mapTo("module", ModuleConf)
 
-	ServerConfig.ReadTimeout = ServerConfig.ReadTimeout * time.Second
-	ServerConfig.WriteTimeout = ServerConfig.WriteTimeout * time.Second
-	RedisConfig.IdleTimeout = RedisConfig.IdleTimeout * time.Second
+	ServerConf.ReadTimeout = ServerConf.ReadTimeout * time.Second
+	ServerConf.WriteTimeout = ServerConf.WriteTimeout * time.Second
+	RedisConf.IdleTimeout = RedisConf.IdleTimeout * time.Second
 }
 
 func mapTo(section string, v interface{}) {

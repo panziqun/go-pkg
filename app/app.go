@@ -3,6 +3,12 @@ package app
 import (
 	"net/http"
 
+	"github.com/laughmaker/go-pkg/conf"
+	"github.com/laughmaker/go-pkg/db"
+	"github.com/laughmaker/go-pkg/log"
+	"github.com/laughmaker/go-pkg/mongo"
+	"github.com/laughmaker/go-pkg/redis"
+
 	"github.com/gin-gonic/gin"
 )
 
@@ -18,9 +24,12 @@ type Response struct {
 }
 
 // 加载配置组件
-//
 func Config() {
-
+	conf.Setup()
+	log.Setup()
+	db.Setup()
+	redis.Setup()
+	mongo.Setup()
 }
 
 func (app *Application) Response(httpStatus, code int, data interface{}, page interface{}) {

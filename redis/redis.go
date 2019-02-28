@@ -7,31 +7,31 @@ import (
 	"time"
 
 	"github.com/gomodule/redigo/redis"
-	"github.com/laughmaker/go-pkg/config"
+	"github.com/laughmaker/go-pkg/conf"
 )
 
 var RedisPool *redis.Pool
 
 func Setup() error {
 	RedisPool = &redis.Pool{
-		MaxIdle:     config.RedisConfig.MaxIdle,
-		MaxActive:   config.RedisConfig.MaxActive,
-		IdleTimeout: config.RedisConfig.IdleTimeout,
+		MaxIdle:     conf.RedisConf.MaxIdle,
+		MaxActive:   conf.RedisConf.MaxActive,
+		IdleTimeout: conf.RedisConf.IdleTimeout,
 		Dial: func() (redis.Conn, error) {
-			addres := fmt.Sprintf("%s:%d", config.RedisConfig.Host, config.RedisConfig.Port)
+			addres := fmt.Sprintf("%s:%d", conf.RedisConf.Host, conf.RedisConf.Port)
 			c, err := redis.Dial("tcp", addres)
 			if err != nil {
 				return nil, err
 			}
 
-			if config.RedisConfig.Password != "" {
-				if _, err := c.Do("AUTH", config.RedisConfig.Password); err != nil {
+			if conf.RedisConf.Password != "" {
+				if _, err := c.Do("AUTH", conf.RedisConf.Password); err != nil {
 					c.Close()
 					return nil, err
 				}
 			}
 
-			if _, err := c.Do("SELECT", config.RedisConfig.Db); err != nil {
+			if _, err := c.Do("SELECT", conf.RedisConf.Db); err != nil {
 				c.Close()
 				return nil, err
 			}
