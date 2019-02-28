@@ -17,6 +17,12 @@ type Response struct {
 	Page    interface{} `json:"page"`
 }
 
+// 加载配置组件
+//
+func Config() {
+
+}
+
 func (app *Application) Response(httpStatus, code int, data interface{}, page interface{}) {
 	message := GetMessage(code)
 	if httpStatus != http.StatusOK {

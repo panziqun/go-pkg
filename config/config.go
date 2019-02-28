@@ -55,6 +55,13 @@ type Redis struct {
 	Db          int
 }
 
+type Mongodb struct {
+	Host     string
+	Port     int
+	User     string
+	Password string
+}
+
 var cfg *ini.File
 
 var AppConfig = &App{}
@@ -62,6 +69,7 @@ var DatabaseConfig = &Database{}
 var ServerConfig = &Server{}
 var MailConfig = &Mail{}
 var RedisConfig = &Redis{}
+var MongodbConfig = &Mongodb{}
 
 func Setup() {
 	var err error
@@ -75,6 +83,7 @@ func Setup() {
 	mapTo("server", ServerConfig)
 	mapTo("mail", MailConfig)
 	mapTo("redis", RedisConfig)
+	mapTo("mongodb", MongodbConfig)
 
 	ServerConfig.ReadTimeout = ServerConfig.ReadTimeout * time.Second
 	ServerConfig.WriteTimeout = ServerConfig.WriteTimeout * time.Second
