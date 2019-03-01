@@ -15,13 +15,13 @@ import (
 var Database *mongo.Database
 
 func Setup() (err error) {
-	var url string
+	var uri string
 	if conf.MongodbConf.User != "" {
-		uri = fmt.Printf("mongodb://%s:%s@%s:%d", conf.MongodbConf.User, conf.MongodbConf.Password conf.MongodbConf.Host, conf.MongodbConf.Port)
+		uri = fmt.Sprintf("mongodb://%s:%s@%s:%d", conf.MongodbConf.User, conf.MongodbConf.Password, conf.MongodbConf.Host, conf.MongodbConf.Port)
 	} else {
-		uri = fmt.Printf("mongodb://@%s:%d", conf.MongodbConf.Host, conf.MongodbConf.Port)
+		uri = fmt.Sprintf("mongodb://@%s:%d", conf.MongodbConf.Host, conf.MongodbConf.Port)
 	}
-	
+
 	client, err := mongo.NewClient(options.Client().ApplyURI(uri))
 	if err != nil {
 		fmt.Println("new client err:%v", err)
