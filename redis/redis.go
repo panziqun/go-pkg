@@ -14,24 +14,24 @@ var RedisPool *redis.Pool
 
 func Setup() error {
 	RedisPool = &redis.Pool{
-		MaxIdle:     conf.RedisConf.MaxIdle,
-		MaxActive:   conf.RedisConf.MaxActive,
-		IdleTimeout: conf.RedisConf.IdleTimeout,
+		MaxIdle:     conf.Redis.MaxIdle,
+		MaxActive:   conf.Redis.MaxActive,
+		IdleTimeout: conf.Redis.IdleTimeout,
 		Dial: func() (redis.Conn, error) {
-			addres := fmt.Sprintf("%s:%d", conf.RedisConf.Host, conf.RedisConf.Port)
+			addres := fmt.Sprintf("%s:%d", conf.Redis.Host, conf.Redis.Port)
 			c, err := redis.Dial("tcp", addres)
 			if err != nil {
 				return nil, err
 			}
 
-			if conf.RedisConf.Password != "" {
-				if _, err := c.Do("AUTH", conf.RedisConf.Password); err != nil {
+			if conf.Redis.Password != "" {
+				if _, err := c.Do("AUTH", conf.Redis.Password); err != nil {
 					c.Close()
 					return nil, err
 				}
 			}
 
-			if _, err := c.Do("SELECT", conf.RedisConf.Db); err != nil {
+			if _, err := c.Do("SELECT", conf.Redis.Db); err != nil {
 				c.Close()
 				return nil, err
 			}

@@ -13,19 +13,19 @@ var DB *gorm.DB
 func Setup() {
 	var err error
 	connect := fmt.Sprintf("%s:%s@tcp(%s:%s)/%s?charset=%s&parseTime=%s&loc=%s",
-		conf.DatabaseConf.User,
-		conf.DatabaseConf.Password,
-		conf.DatabaseConf.Host,
-		conf.DatabaseConf.Port,
-		conf.DatabaseConf.Name,
-		conf.DatabaseConf.Charset,
-		conf.DatabaseConf.ParseTime,
-		conf.DatabaseConf.Loc)
-	DB, err = gorm.Open(conf.DatabaseConf.Type, connect)
+		conf.Database.User,
+		conf.Database.Password,
+		conf.Database.Host,
+		conf.Database.Port,
+		conf.Database.Name,
+		conf.Database.Charset,
+		conf.Database.ParseTime,
+		conf.Database.Loc)
+	DB, err = gorm.Open(conf.Database.Type, connect)
 	if err != nil {
 		fmt.Printf("mysql connect error %v", err)
 	}
-	DB.SingularTable(conf.DatabaseConf.SingularTable)
+	DB.SingularTable(conf.Database.SingularTable)
 
 	if DB.Error != nil {
 		fmt.Printf("database error %v", DB.Error)

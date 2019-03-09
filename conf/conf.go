@@ -7,7 +7,7 @@ import (
 	"github.com/go-ini/ini"
 )
 
-type Module struct {
+type ModuleConf struct {
 	Database bool
 	Mail     bool
 	Redis    bool
@@ -15,7 +15,7 @@ type Module struct {
 	Log      bool
 }
 
-type App struct {
+type AppConf struct {
 	Name        string
 	Version     string
 	JwtSecret   string
@@ -26,7 +26,7 @@ type App struct {
 	TimeFormt   string
 }
 
-type Database struct {
+type DatabaseConf struct {
 	Type          string
 	User          string
 	Password      string
@@ -39,21 +39,21 @@ type Database struct {
 	SingularTable bool
 }
 
-type Server struct {
+type ServerConf struct {
 	RunMode      string
 	HttpPort     int
 	ReadTimeout  time.Duration
 	WriteTimeout time.Duration
 }
 
-type Mail struct {
+type MailConf struct {
 	Host     string
 	Port     int
 	User     string
 	Password string
 }
 
-type Redis struct {
+type RedisConf struct {
 	Host        string
 	Port        int
 	MaxIdle     int
@@ -63,7 +63,7 @@ type Redis struct {
 	Db          int
 }
 
-type Mongodb struct {
+type MongodbConf struct {
 	Database string
 	Host     string
 	Port     int
@@ -73,13 +73,13 @@ type Mongodb struct {
 
 var cfg *ini.File
 
-var ModuleConf = &Module{}
-var AppConf = &App{}
-var DatabaseConf = &Database{}
-var ServerConf = &Server{}
-var MailConf = &Mail{}
-var RedisConf = &Redis{}
-var MongodbConf = &Mongodb{}
+var Module = &ModuleConf{}
+var App = &AppConf{}
+var Database = &DatabaseConf{}
+var Server = &ServerConf{}
+var Mail = &MailConf{}
+var Redis = &RedisConf{}
+var Mongodb = &MongodbConf{}
 
 func Setup() {
 	var err error
@@ -88,17 +88,17 @@ func Setup() {
 		fmt.Printf("fail to parse 'app.ini': %v", err)
 	}
 
-	mapTo("app", AppConf)
-	mapTo("database", DatabaseConf)
-	mapTo("server", ServerConf)
-	mapTo("mail", MailConf)
-	mapTo("redis", RedisConf)
-	mapTo("mongodb", MongodbConf)
-	mapTo("module", ModuleConf)
+	mapTo("app", App)
+	mapTo("database", Database)
+	mapTo("server", Server)
+	mapTo("mail", Mail)
+	mapTo("redis", Redis)
+	mapTo("mongodb", Mongodb)
+	mapTo("module", Module)
 
-	ServerConf.ReadTimeout = ServerConf.ReadTimeout * time.Second
-	ServerConf.WriteTimeout = ServerConf.WriteTimeout * time.Second
-	RedisConf.IdleTimeout = RedisConf.IdleTimeout * time.Second
+	Server.ReadTimeout = Server.ReadTimeout * time.Second
+	Server.WriteTimeout = Server.WriteTimeout * time.Second
+	Redis.IdleTimeout = Redis.IdleTimeout * time.Second
 }
 
 func mapTo(section string, v interface{}) {

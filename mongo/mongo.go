@@ -15,10 +15,10 @@ var Database *mongo.Database
 
 func Setup() (err error) {
 	var uri string
-	if conf.MongodbConf.User != "" {
-		uri = fmt.Sprintf("mongodb://%s:%s@%s:%d", conf.MongodbConf.User, conf.MongodbConf.Password, conf.MongodbConf.Host, conf.MongodbConf.Port)
+	if conf.Mongodb.User != "" {
+		uri = fmt.Sprintf("mongodb://%s:%s@%s:%d", conf.Mongodb.User, conf.Mongodb.Password, conf.Mongodb.Host, conf.Mongodb.Port)
 	} else {
-		uri = fmt.Sprintf("mongodb://@%s:%d", conf.MongodbConf.Host, conf.MongodbConf.Port)
+		uri = fmt.Sprintf("mongodb://@%s:%d", conf.Mongodb.Host, conf.Mongodb.Port)
 	}
 
 	client, err := mongo.NewClient(options.Client().ApplyURI(uri))
@@ -29,7 +29,7 @@ func Setup() (err error) {
 	ctx, cancel := context.WithTimeout(context.Background(), 20*time.Second)
 	defer cancel()
 	err = client.Connect(ctx)
-	Database = client.Database(conf.MongodbConf.Database)
+	Database = client.Database(conf.Mongodb.Database)
 	if err != nil {
 		fmt.Printf("client connect err:%v", err)
 		return err

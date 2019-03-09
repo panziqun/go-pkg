@@ -7,7 +7,7 @@ import (
 	"github.com/laughmaker/go-pkg/conf"
 )
 
-var jwtSecret = []byte(conf.AppConf.JwtSecret)
+var jwtSecret = []byte(conf.App.JwtSecret)
 
 type Claims struct {
 	Username string `json:"username"`
@@ -24,7 +24,7 @@ func GenerateToken(username, password string) (string, error) {
 		Md5(password),
 		jwt.StandardClaims{
 			ExpiresAt: expireTime.Unix(),
-			Issuer:    conf.AppConf.Name,
+			Issuer:    conf.App.Name,
 		},
 	}
 

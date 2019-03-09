@@ -80,13 +80,13 @@ func setPrefix(level Level) {
 }
 
 func getLogFilePath() string {
-	return fmt.Sprintf("%s%s", conf.AppConf.RuntimePath, conf.AppConf.LogSavePath)
+	return fmt.Sprintf("%s%s", conf.App.RuntimePath, conf.App.LogSavePath)
 }
 
 func getLogFileName() string {
 	return fmt.Sprintf("%s-%s.%s",
-		conf.AppConf.LogSaveName,
-		time.Now().Format(conf.AppConf.TimeFormt),
-		conf.AppConf.LogFileExt,
+		conf.App.LogSaveName,
+		time.Now().Format(conf.App.TimeFormt),
+		conf.App.LogFileExt,
 	)
 }

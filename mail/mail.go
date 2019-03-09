@@ -13,7 +13,7 @@ import (
  */
 func Send(to, subject, body, attach string) {
 	m := gomail.NewMessage()
-	m.SetHeader("From", conf.MailConf.User)
+	m.SetHeader("From", conf.Mail.User)
 	m.SetHeader("To", to)
 	m.SetHeader("Subject", subject)
 	m.SetBody("text/html", body)
@@ -21,7 +21,7 @@ func Send(to, subject, body, attach string) {
 		m.Attach(attach)
 	}
 
-	d := gomail.NewDialer(conf.MailConf.Host, conf.MailConf.Port, conf.MailConf.User, conf.MailConf.Password)
+	d := gomail.NewDialer(conf.Mail.Host, conf.Mail.Port, conf.Mail.User, conf.Mail.Password)
 	d.TLSConf = &tls.Conf{InsecureSkipVerify: true}
 
 	if err := d.DialAndSend(m); err != nil {
