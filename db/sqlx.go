@@ -3,7 +3,7 @@ package db
 import (
 	"fmt"
 
-	"go-pkg/conf"
+	"github.com/laughmaker/go-pkg/conf"
 
 	_ "github.com/go-sql-driver/mysql"
 	"github.com/jmoiron/sqlx"

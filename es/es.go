@@ -3,11 +3,11 @@ package es
 import (
 	"context"
 	"fmt"
-	"go-pkg/conf"
 	"log"
 	"os"
 	"strconv"
 
+	"github.com/laughmaker/go-pkg/conf"
 	"github.com/olivere/elastic/v7"
 )
 

@@ -2,8 +2,9 @@ package db
 
 import (
 	"fmt"
-	"go-pkg/conf"
 	"strconv"
+
+	"github.com/laughmaker/go-pkg/conf"
 
 	"github.com/jinzhu/gorm"
 	_ "github.com/jinzhu/gorm/dialects/mysql"

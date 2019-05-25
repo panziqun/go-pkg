@@ -4,9 +4,10 @@ import (
 	cf "app/conf"
 	"encoding/json"
 	"fmt"
-	"go-pkg/conf"
-	"go-pkg/mail"
 	"time"
+
+	"github.com/laughmaker/go-pkg/conf"
+	"github.com/laughmaker/go-pkg/mail"
 
 	sls "github.com/aliyun/aliyun-log-go-sdk"
 	"github.com/gin-gonic/gin"

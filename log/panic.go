@@ -3,16 +3,17 @@ package log
 import (
 	"encoding/json"
 	"fmt"
-	"go-pkg/conf"
-	"go-pkg/file"
-	"go-pkg/mail"
-	"go-pkg/resp"
 	"io/ioutil"
 	"log"
 	"net/http"
 	"runtime/debug"
 	"strings"
 	"time"
+
+	"github.com/laughmaker/go-pkg/conf"
+	"github.com/laughmaker/go-pkg/file"
+	"github.com/laughmaker/go-pkg/mail"
+	"github.com/laughmaker/go-pkg/resp"
 
 	"github.com/gin-gonic/gin"
 )

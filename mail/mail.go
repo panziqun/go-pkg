@@ -3,7 +3,7 @@ package mail
 import (
 	"fmt"
 
-	"go-pkg/conf"
+	"github.com/laughmaker/go-pkg/conf"
 
 	"gopkg.in/gomail.v2"
 )

@@ -6,7 +6,7 @@ import (
 	"strconv"
 	"time"
 
-	"go-pkg/conf"
+	"github.com/laughmaker/go-pkg/conf"
 
 	"github.com/gomodule/redigo/redis"
 )

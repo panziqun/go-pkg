@@ -8,8 +8,8 @@ import (
 	"runtime"
 	"time"
 
-	"go-pkg/conf"
-	"go-pkg/file"
+	"github.com/laughmaker/go-pkg/conf"
+	"github.com/laughmaker/go-pkg/file"
 )
 
 type Level int
