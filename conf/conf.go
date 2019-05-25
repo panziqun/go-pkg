@@ -2,28 +2,23 @@ package conf
 
 import (
 	"fmt"
+	"os"
 	"time"
 
 	"github.com/go-ini/ini"
 )
-
-type ModuleConf struct {
-	Database bool
-	Mail     bool
-	Redis    bool
-	Mongodb  bool
-	Log      bool
-}
 
 type AppConf struct {
 	Name        string
 	Version     string
 	JwtSecret   string
 	RuntimePath string
-	LogSavePath string
-	LogSaveName string
-	LogFileExt  string
-	TimeFormt   string
+
+	LogPath      string
+	LogFileExt   string
+	LogTimeFormt string
+	LogMail      string
+	LogPanicPath string
 }
 
 type DatabaseConf struct {
@@ -64,16 +59,15 @@ type RedisConf struct {
 }
 
 type MongodbConf struct {
-	Database string
+	Name     string
 	Host     string
 	Port     int
 	User     string
 	Password string
 }
 
-var cfg *ini.File
+var file *ini.File
 
-var Module = &ModuleConf{}
 var App = &AppConf{}
 var Database = &DatabaseConf{}
 var Server = &ServerConf{}
@@ -82,10 +76,19 @@ var Redis = &RedisConf{}
 var Mongodb = &MongodbConf{}
 
 func Setup() {
-	var err error
-	cfg, err = ini.Load("src/conf/app.ini", "src/conf/app.ini.local")
+	LoadSources("conf/app.ini", "conf/app.local.ini")
+}
+
+func LoadSources(source string, local string) {
+	wd, err := os.Getwd()
+	if err != nil {
+		panic(err)
+	}
+
+	file, err = ini.Load(wd+"/"+source, wd+"/"+local)
 	if err != nil {
 		fmt.Printf("fail to parse 'app.ini': %v", err)
+		panic(err)
 	}
 
 	mapTo("app", App)
@@ -94,7 +97,6 @@ func Setup() {
 	mapTo("mail", Mail)
 	mapTo("redis", Redis)
 	mapTo("mongodb", Mongodb)
-	mapTo("module", Module)
 
 	Server.ReadTimeout = Server.ReadTimeout * time.Second
 	Server.WriteTimeout = Server.WriteTimeout * time.Second
@@ -102,8 +104,14 @@ func Setup() {
 }
 
 func mapTo(section string, v interface{}) {
-	err := cfg.Section(section).MapTo(v)
+	err := file.Section(section).MapTo(v)
 	if err != nil {
-		fmt.Printf("cfg.MapTo err: %v", err)
+		fmt.Printf("file.MapTo err: %v", err)
+		panic(err)
 	}
+}
+
+func Section(name string) map[string]string {
+	sec := file.Section(name)
+	return sec.KeysHash()
 }

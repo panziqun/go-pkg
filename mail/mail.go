@@ -1,10 +1,10 @@
 package mail
 
 import (
-	"crypto/tls"
+	"fmt"
 
-	"github.com/laughmaker/go-pkg/conf"
-	"github.com/laughmaker/go-pkg/log"
+	"go-pkg/conf"
+
 	"gopkg.in/gomail.v2"
 )
 
@@ -22,9 +22,8 @@ func Send(to, subject, body, attach string) {
 	}
 
 	d := gomail.NewDialer(conf.Mail.Host, conf.Mail.Port, conf.Mail.User, conf.Mail.Password)
-	d.TLSConf = &tls.Conf{InsecureSkipVerify: true}
 
 	if err := d.DialAndSend(m); err != nil {
-		log.Error(err)
+		fmt.Println(err)
 	}
 }

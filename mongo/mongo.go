@@ -3,71 +3,82 @@ package mongo
 import (
 	"context"
 	"fmt"
-	"log"
 	"time"
 
-	"github.com/laughmaker/go-pkg/conf"
+	"go.mongodb.org/mongo-driver/bson"
+
+	"go-pkg/conf"
+
 	"go.mongodb.org/mongo-driver/mongo"
 	"go.mongodb.org/mongo-driver/mongo/options"
 )
 
-var Database *mongo.Database
+var client *mongo.Client
 
-func Setup() (err error) {
+type Mongo struct {
+	DB *mongo.Database
+}
+
+func Setup() {
 	var uri string
 	if conf.Mongodb.User != "" {
 		uri = fmt.Sprintf("mongodb://%s:%s@%s:%d", conf.Mongodb.User, conf.Mongodb.Password, conf.Mongodb.Host, conf.Mongodb.Port)
 	} else {
 		uri = fmt.Sprintf("mongodb://@%s:%d", conf.Mongodb.Host, conf.Mongodb.Port)
 	}
-
-	client, err := mongo.NewClient(options.Client().ApplyURI(uri))
+	var err error
+	client, err = mongo.NewClient(options.Client().ApplyURI(uri))
 	if err != nil {
 		fmt.Printf("new client err:%v", err)
-		return err
+		panic(err)
 	}
 	ctx, cancel := context.WithTimeout(context.Background(), 20*time.Second)
 	defer cancel()
 	err = client.Connect(ctx)
-	Database = client.Database(conf.Mongodb.Database)
 	if err != nil {
 		fmt.Printf("client connect err:%v", err)
-		return err
+		panic(err)
 	}
-	return err
 }
 
-func InsertOne(name string, data interface{}) (id interface{}, err error) {
-	res, err := Database.Collection(name).InsertOne(context.Background(), data)
+func GetDB(dbname string) *mongo.Database {
+	return client.Database(dbname)
+}
+
+func DefaultDB() *mongo.Database {
+	return client.Database(conf.Mongodb.Name)
+}
+
+func (m *Mongo) InsertOne(name string, data interface{}) (id interface{}, err error) {
+	res, err := m.DB.Collection(name).InsertOne(context.Background(), data)
 	if err != nil {
 		return nil, err
 	}
 	return res.InsertedID, nil
 }
 
-func One(name string, filter interface{}) (model interface{}, err error) {
-	err = Database.Collection(name).FindOne(context.Background(), filter).Decode(&model)
+func (m *Mongo) One(name string, filter interface{}, args ...*options.FindOneOptions) (model interface{}, err error) {
+	err = m.DB.Collection(name).FindOne(context.Background(), filter, args...).Decode(&model)
 	if err != nil {
 		return nil, err
 	}
 	return model, nil
 }
 
-func All(name string, filter interface{}) (list []interface{}, err error) {
-	cur, err := Database.Collection(name).Find(context.Background(), filter)
+func (m *Mongo) All(name string, filter interface{}, args ...*options.FindOptions) (list []interface{}, err error) {
+	cur, err := m.DB.Collection(name).Find(context.Background(), filter, args...)
 	if err != nil {
-		log.Fatal(err)
+		return nil, err
 	}
 	defer cur.Close(context.Background())
-
-	count, _ := Database.Collection(name).CountDocuments(context.Background(), filter)
-	list = make([]interface{}, count)
 	for cur.Next(context.Background()) {
-		list = append(list, cur.Current)
+		var result bson.M
+		cur.Decode(&result)
+		list = append(list, result)
 	}
 	if err := cur.Err(); err != nil {
 		return nil, err
 	}
 
-	return list, err
+	return list, nil
 }

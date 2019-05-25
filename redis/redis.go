@@ -6,13 +6,14 @@ import (
 	"strconv"
 	"time"
 
+	"go-pkg/conf"
+
 	"github.com/gomodule/redigo/redis"
-	"github.com/laughmaker/go-pkg/conf"
 )
 
 var RedisPool *redis.Pool
 
-func Setup() error {
+func Setup() {
 	RedisPool = &redis.Pool{
 		MaxIdle:     conf.Redis.MaxIdle,
 		MaxActive:   conf.Redis.MaxActive,
@@ -43,8 +44,6 @@ func Setup() error {
 			return err
 		},
 	}
-
-	return nil
 }
 
 func Set(key string, data interface{}, time int) error {

@@ -1,12 +1,11 @@
 package curl
 
 import (
-	"bytes"
 	"encoding/json"
-	"io"
 	"io/ioutil"
 	"net"
 	"net/http"
+	"strings"
 	"time"
 )
 
@@ -42,6 +41,13 @@ func (this *Response) parseBody() error {
 	return nil
 }
 
+var (
+	GET_METHOD    = "GET"
+	POST_METHOD   = "POST"
+	SENDTYPE_FORM = "form"
+	SENDTYPE_JSON = "json"
+)
+
 type Request struct {
 	client          *http.Client
 	req             *http.Request
@@ -53,6 +59,7 @@ type Request struct {
 	Cookies         map[string]string
 	Queries         map[string]string
 	Body            map[string]interface{}
+	SendType        string
 }
 
 func NewRequest() *Request {
@@ -105,6 +112,7 @@ func (this *Request) AddFormDataHeader() *Request {
 
 func (this *Request) AddJsonHeader() *Request {
 	this.AddHeader("Content-Type", "application/json")
+	this.SendType = SENDTYPE_JSON
 	return this
 }
 
@@ -174,7 +182,7 @@ func (this *Request) Get() (*Response, error) {
 }
 
 func (this *Request) Post() (*Response, error) {
-	return this.AddFormHeader().Send(this.Url, http.MethodPost)
+	return this.Send(this.Url, http.MethodPost)
 }
 
 func (this *Request) Put() (*Response, error) {
@@ -208,16 +216,25 @@ func (this *Request) NewClient() {
 func (this *Request) Send(url string, method string) (*Response, error) {
 	this.NewClient()
 
-	var body io.Reader
+	var body string
 	if this.Body != nil {
-		if jsonByte, err := json.Marshal(this.Body); err != nil {
-			return nil, err
+		if this.SendType == SENDTYPE_JSON {
+			jsonByte, err := json.Marshal(this.Body)
+			if err != nil {
+				return nil, err
+			}
+			body = string(jsonByte)
 		} else {
-			body = bytes.NewReader(jsonByte)
+			send_body := http.Request{}
+			send_body.ParseForm()
+			for k, v := range this.Body {
+				send_body.Form.Add(k, v.(string))
+			}
+			body = send_body.Form.Encode()
 		}
 	}
 
-	if req, err := http.NewRequest(method, url, body); err != nil {
+	if req, err := http.NewRequest(method, url, strings.NewReader(body)); err != nil {
 		return nil, err
 	} else {
 		this.req = req
