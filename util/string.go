@@ -26,3 +26,9 @@ func RandNumber(l int) string {
 	}
 	return string(result)
 }
+
+func RandRangeNumber(s int, e int) int {
+	diff := e - s
+	r := rand.New(rand.NewSource(time.Now().UnixNano()))
+	return e + r.Intn(diff)
+}
