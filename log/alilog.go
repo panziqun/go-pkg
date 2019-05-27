@@ -1,13 +1,13 @@
 package log
 
 import (
-	cf "app/conf"
 	"encoding/json"
 	"fmt"
 	"time"
 
 	"github.com/laughmaker/go-pkg/conf"
 	"github.com/laughmaker/go-pkg/mail"
+	"github.com/laughmaker/go-pkg/resp"
 
 	sls "github.com/aliyun/aliyun-log-go-sdk"
 	"github.com/gin-gonic/gin"
@@ -43,14 +43,14 @@ func PutLog(topic string, c *gin.Context, err string, stack string) {
 	}
 	contents = append(contents, content)
 
-	requestBody, _ := c.Get(cf.ReqBodyKey)
+	requestBody, _ := c.Get(resp.ReqBodyKey)
 	content = &sls.LogContent{
 		Key:   proto.String("request"),
 		Value: proto.String(requestBody.(string)),
 	}
 	contents = append(contents, content)
 
-	respData, _ := c.Get(cf.RespDataKey)
+	respData, _ := c.Get(resp.RespDataKey)
 	rd, _ := json.Marshal(respData)
 	content = &sls.LogContent{
 		Key:   proto.String("response"),
