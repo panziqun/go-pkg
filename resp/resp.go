@@ -22,7 +22,7 @@ type Data struct {
 
 // Send resp's send data
 func (r *Resp) Send(httpStatus, code int, data interface{}, page interface{}) {
-	message := GetMessage(code)
+	message := getCodeText(code)
 	if httpStatus != http.StatusOK {
 		message = http.StatusText(httpStatus)
 	}

@@ -1,5 +1,12 @@
 package resp
 
+import (
+	"fmt"
+	"os"
+
+	"github.com/go-ini/ini"
+)
+
 const (
 	// Success access successful
 	Success = 2000
@@ -29,30 +36,55 @@ const (
 	UsernameOrPasswordError = 4012
 )
 
-// Message code message struct
-var Message = map[int]string{
-	Success: "ok",
-	Failure: "failure",
+// CodeText code message struct
+var codeText = map[int]string{
+	Success: "请求成功！",
+	Failure: "请求失败",
 
-	NetworkError: "网络请求失败",
+	NetworkError: "网络请求失败！",
 
-	TokenInvalid: "无效的令牌",
-	TokenExpired: "过期的令牌",
-	TokenEmpty:   "空令牌",
+	TokenInvalid: "无效的令牌！",
+	TokenExpired: "过期的令牌！",
+	TokenEmpty:   "空令牌！",
 
-	DataNotExist:            "数据不存在",
-	DataExist:               "数据已存在",
-	UsernameOrPasswordError: "用户名或密码错误",
+	DataNotExist:            "数据不存在！",
+	DataExist:               "数据已存在！",
+	UsernameOrPasswordError: "用户名或密码错误！",
 }
 
-// GetMessage access code message
-func GetMessage(code int) string {
-	message, ok := Message[code]
+var file *ini.File
+
+// Setup load resp config
+func Setup() {
+	wd, err := os.Getwd()
+	if err != nil {
+		panic(err)
+	}
+
+	file, err = ini.Load(wd + "/conf/code.ini")
+	if err != nil {
+		fmt.Printf("fail to parse 'code.ini': %v", err)
+		panic(err)
+	}
+
+	respCode := file.Section("respCode").KeysHash()
+	fmt.Println(respCode["8000"])
+}
+
+// CodeText access code message
+func getCodeText(code int) string {
+	message, ok := codeText[code]
 	if ok {
 		return message
 	}
 
-	return Message[Failure]
+	respCode := file.Section("respCode").KeysHash()
+	message = respCode[fmt.Sprintf("%d", code)]
+	if message != "" {
+		return message
+	}
+
+	return codeText[Failure]
 }
 
 // RespDataKey 存储每次返回数据到Context中
