@@ -1,28 +1,25 @@
 package middleware
 
 import (
-	"app/conf"
-
 	"github.com/laughmaker/go-pkg/resp"
 	"github.com/laughmaker/go-pkg/util"
 
 	"github.com/gin-gonic/gin"
 )
 
-var UserId int
-
+// Auth auth middleware
 func Auth() gin.HandlerFunc {
 	return func(c *gin.Context) {
 
 		token := c.Request.Header.Get("token")
 		if token == "" {
-			abort(c, conf.TokenEmpty)
+			abort(c, resp.TokenEmpty)
 			return
 		}
 		var err error
-		UserId, err = util.ParseToken(token)
+		_, err = util.ParseToken(token)
 		if err != nil {
-			abort(c, conf.TokenInvalid)
+			abort(c, resp.TokenInvalid)
 			return
 		}
 

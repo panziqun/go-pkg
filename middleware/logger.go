@@ -10,6 +10,7 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
+// Logger logger middleware
 func Logger() gin.HandlerFunc {
 	return func(c *gin.Context) {
 		// 捕获panic异常
