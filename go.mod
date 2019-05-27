@@ -17,6 +17,7 @@ replace (
 require (
 	github.com/aliyun/alibaba-cloud-sdk-go v0.0.0-20190524120938-d471c41f6e1f
 	github.com/aliyun/aliyun-log-go-sdk v0.0.0-20190514033836-f7ccbaffaef0
+	github.com/aliyun/aliyun-oss-go-sdk v0.0.0-20190307165228-86c17b95fcd5
 	github.com/cenkalti/backoff v2.1.1+incompatible // indirect
 	github.com/cloudflare/golz4 v0.0.0-20150217214814-ef862a3cdc58 // indirect
 	github.com/gin-gonic/gin v1.4.0
