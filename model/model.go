@@ -2,6 +2,7 @@ package model
 
 import "time"
 
+// Model common model
 type Model struct {
 	ID        uint       `json:"id" gorm:"primary_key"`        // id主键
 	CreatedAt time.Time  `json:"created_at" gorm:"created_at"` // 创建时间
