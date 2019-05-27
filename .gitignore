@@ -1,0 +1,26 @@
+.idea/
+.DS_Store
+.vscode
+
+*.exe
+*.exe~
+*.dll
+*.so
+*.dylib
+
+# Test binary, build with `go test -c`
+*.test
+
+# Output of the go coverage tool, specifically when used with LiteIDE
+*.out
+
+/runtime
+/docs
+/app
+/conf/app.local.ini
+
+app
+nohup.out
+restart.sh
+
+vendor
