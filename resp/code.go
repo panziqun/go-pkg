@@ -68,7 +68,6 @@ func Setup() {
 	}
 
 	respCode := file.Section("respCode").KeysHash()
-	fmt.Println(respCode["8000"])
 }
 
 // CodeText access code message
