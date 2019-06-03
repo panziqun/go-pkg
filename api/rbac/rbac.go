@@ -241,7 +241,7 @@ func DeleteRole(c *gin.Context) {
 
 func SyncSwagList() {
 	var list []map[string]string
-	data, err := ioutil.ReadFile("./docs/swagger/swagger.json")
+	data, err := ioutil.ReadFile("./docs/swagger.json")
 	if err != nil {
 		panic(err)
 	}
